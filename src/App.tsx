@@ -1,162 +1,174 @@
-export type Programme = {
-  year: string;
-  title: string;
-  description: string;
-};
+import data from './data';
+import { Panel } from './components';
 
-export type Announcement = {
-  date: string;
-  title: string;
-  text: string;
-};
+export function StudentPortal({ onBack }: { onBack: () => void }) {
+  const student = {
+    name: 'Aisha Bello',
+    level: 'Year 2',
+    attendance: 88,
+    classesToday: 4,
+  };
 
-export type Feature = {
-  title: string;
-  text: string;
-};
+  return (
+    <div className="portal-shell">
+      <header className="topbar">
+        <div className="brand-inline">
+          <div className="brand-mark small">AT</div>
+          <div>
+            <strong>Aisha Teachers College</strong>
+            <small>Student Portal</small>
+          </div>
+        </div>
 
-export type StaffMember = {
-  name: string;
-  role: string;
-  email: string;
-};
+        <nav className="portal-nav" aria-label="Student navigation">
+          <button type="button" className="nav-link active">Dashboard</button>
+          <button type="button" className="nav-link">Courses</button>
+          <button type="button" className="nav-link">Attendance</button>
+          <button type="button" className="nav-link">Calendar</button>
+        </nav>
 
-export type StudentCourse = {
-  code: string;
-  title: string;
-  lecturer: string;
-  time: string;
-  venue: string;
-  attendance: number;
-};
+        <div className="user-badge">
+          <span className="dot" />
+          {student.name}
+        </div>
+      </header>
 
-export type AttendanceRow = {
-  course: string;
-  date: string;
-  status: 'Present' | 'Absent' | 'Late' | 'Excused';
-};
+      <main className="portal-content">
+        <section className="welcome-panel">
+          <div>
+            <p className="eyebrow">Good morning</p>
+            <h1>Welcome back, {student.name.split(' ')[0]}.</h1>
+          </div>
+          <button className="secondary-button" onClick={onBack}>Public Site</button>
+        </section>
 
-const navItems = ['Home', 'About', 'Academics', 'Admissions', 'Campus Radio', 'News & Events', 'Contact'];
+        <section className="quick-grid">
+          {data.quickStats.map((card) => (
+            <article key={card.label} className={`metric-card ${card.tone}`}>
+              <span>{card.label}</span>
+              <strong>{card.value}</strong>
+            </article>
+          ))}
+        </section>
 
-const stats = [
-  { label: 'Students', value: '2,400+' },
-  { label: 'Faculties', value: '8' },
-  { label: 'Programmes', value: '4-Year' },
-  { label: 'Support', value: '24/7' },
-];
+        <section className="split-grid">
+          <Panel title="Today’s timetable" badge={`${student.classesToday} classes`}>
+            <div className="timetable-list">
+              {data.studentCourses.map((item) => (
+                <div key={item.code} className="timetable-item">
+                  <div>
+                    <strong>{item.title}</strong>
+                    <small>{item.lecturer}</small>
+                  </div>
+                  <div className="meta-right">
+                    <span>{item.time}</span>
+                    <small>{item.venue}</small>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </Panel>
 
-const programmes: Programme[] = [
-  {
-    year: 'Year 1',
-    title: 'Foundation',
-    description: 'Build the foundations of teacher education through learning skills, communication and educational theory.',
-  },
-  {
-    year: 'Year 2',
-    title: 'Development',
-    description: 'Expand subject knowledge, classroom methods and collaborative learning strategies for teaching practice.',
-  },
-  {
-    year: 'Year 3',
-    title: 'Professional Preparation',
-    description: 'Prepare students for strong classroom management, lesson design, assessment and practicum exposure.',
-  },
-  {
-    year: 'Year 4',
-    title: 'Professional Competence',
-    description: 'Advance final teaching readiness through assessment, supervised practice and professional reflection.',
-  },
-];
+          <Panel title="Attendance summary" badge={`${student.attendance}%`}>
+            <div className="progress-wrap">
+              <div className="progress-bar" style={{ width: `${student.attendance}%` }} />
+            </div>
+            <div className="status-list">
+              {[
+                { title: 'Present', count: 18 },
+                { title: 'Excused', count: 3 },
+                { title: 'Absent', count: 2 },
+                { title: 'Late', count: 1 },
+              ].map((status) => (
+                <div key={status.title} className="status-row">
+                  <span>{status.title}</span>
+                  <strong>{status.count}</strong>
+                </div>
+              ))}
+            </div>
+          </Panel>
+        </section>
+      </main>
+    </div>
+  );
+}
 
-const features: Feature[] = [
-  {
-    title: 'Structured four-year training',
-    text: 'A guided academic journey designed to grow students from foundation learning into confident educators.',
-  },
-  {
-    title: 'Practical teaching experience',
-    text: 'Students develop real classroom communication, lesson planning and instructional confidence in practice.',
-  },
-  {
-    title: 'Professional development',
-    text: 'A disciplined environment that promotes leadership, responsibility and ethical professional growth.',
-  },
-  {
-    title: 'Supportive community',
-    text: 'Students, lecturers and administrators work together in a collaborative academic atmosphere.',
-  },
-  {
-    title: 'Technology-enabled learning',
-    text: 'Digital systems support access to information, course activity, attendance and academic communication.',
-  },
-];
+export function AdminPortal({ onBack }: { onBack: () => void }) {
+  return (
+    <div className="portal-shell admin-shell">
+      <header className="topbar">
+        <div className="brand-inline">
+          <div className="brand-mark small">AT</div>
+          <div>
+            <strong>Aisha Teachers College</strong>
+            <small>Admin Portal</small>
+          </div>
+        </div>
 
-const announcements: Announcement[] = [
-  {
-    date: '12 Nov 2026',
-    title: 'Admission intake opens for the 2026/2027 session',
-    text: 'Prospective students can begin the application process and obtain admission guidance for the new session.',
-  },
-  {
-    date: '08 Nov 2026',
-    title: 'Academic calendar updated',
-    text: 'Check the revised dates for resumption, assessments and teaching practice milestones.',
-  },
-  {
-    date: '02 Nov 2026',
-    title: 'Campus radio programme schedule released',
-    text: 'Students can tune in to educational conversations, updates and student-centred programmes.',
-  },
-];
+        <div className="admin-actions">
+          <button className="secondary-button">+ New Announcement</button>
+          <button className="primary-button" onClick={onBack}>Back to site</button>
+        </div>
+      </header>
 
-const radioShows = [
-  'The Educator\'s Voice',
-  'Campus Conversations',
-  'The Learning Hour',
-  'Ask the Lecturer',
-  'Voice of Inspiration',
-  'Student Spotlight',
-];
+      <main className="portal-content admin-body">
+        <section className="admin-hero">
+          <div>
+            <p className="eyebrow">Institution overview</p>
+            <h1>Campus command centre</h1>
+          </div>
+          <div className="admin-summary">
+            <span>Current session</span>
+            <strong>2026/2027</strong>
+          </div>
+        </section>
 
-const staff: StaffMember[] = [
-  { name: 'Dr. Grace Ajayi', role: 'Academic Coordinator', email: 'grace.ajayi@aishateacherscollege.edu.ng' },
-  { name: 'Mrs. Hajara Ibrahim', role: 'Head of Department', email: 'hajara.ibrahim@aishateacherscollege.edu.ng' },
-  { name: 'Mr. Kola Bello', role: 'Lecturer', email: 'kola.bello@aishateacherscollege.edu.ng' },
-  { name: 'Mrs. Maryam Musa', role: 'Student Affairs Officer', email: 'maryam.musa@aishateacherscollege.edu.ng' },
-];
+        <section className="quick-grid admin-grid">
+          <article className="metric-card blue">
+            <span>Total Students</span>
+            <strong>2,400</strong>
+          </article>
+          <article className="metric-card light">
+            <span>Active Lecturers</span>
+            <strong>84</strong>
+          </article>
+          <article className="metric-card blue">
+            <span>Attendance Rate</span>
+            <strong>91%</strong>
+          </article>
+          <article className="metric-card light">
+            <span>Pending Tasks</span>
+            <strong>12</strong>
+          </article>
+        </section>
 
-const studentCourses: StudentCourse[] = [
-  { code: 'EDU 101', title: 'Educational Psychology', lecturer: 'Dr. Ajayi', time: '08:00 - 09:00', venue: 'Room A5', attendance: 86 },
-  { code: 'ENG 112', title: 'English Methods', lecturer: 'Mrs. Ibrahim', time: '09:30 - 10:30', venue: 'Room B2', attendance: 91 },
-  { code: 'EDU 126', title: 'Classroom Practice', lecturer: 'Mr. Bello', time: '11:00 - 12:00', venue: 'Teaching Lab', attendance: 83 },
-  { code: 'GST 104', title: 'General Studies', lecturer: 'Mrs. Musa', time: '13:00 - 14:00', venue: 'Room C1', attendance: 90 },
-];
+        <section className="split-grid admin-columns">
+          <Panel title="Staff Directory" badge="4 people">
+            <div className="staff-list">
+              {data.staff.map((person) => (
+                <div key={person.email} className="staff-row">
+                  <div>
+                    <strong>{person.name}</strong>
+                    <small>{person.role}</small>
+                  </div>
+                  <span>{person.email}</span>
+                </div>
+              ))}
+            </div>
+          </Panel>
 
-const attendanceRows: AttendanceRow[] = [
-  { course: 'Educational Psychology', date: '2026-11-05', status: 'Present' },
-  { course: 'English Methods', date: '2026-11-05', status: 'Late' },
-  { course: 'Classroom Practice', date: '2026-11-06', status: 'Present' },
-  { course: 'General Studies', date: '2026-11-07', status: 'Excused' },
-  { course: 'Educational Psychology', date: '2026-11-08', status: 'Present' },
-  { course: 'English Methods', date: '2026-11-08', status: 'Absent' },
-];
-
-const quickStats = [
-  { label: 'Attendance', value: '88%', tone: 'blue' },
-  { label: 'Current Level', value: 'Year 2', tone: 'light' },
-  { label: 'Classes Today', value: '4', tone: 'blue' },
-  { label: 'Unread Notices', value: '6', tone: 'light' },
-];
-
-export default {
-  navItems,
-  stats,
-  programmes,
-  features,
-  announcements,
-  radioShows,
-  staff,
-  studentCourses,
-  attendanceRows,
-  quickStats,
-};
+          <Panel title="Announcements" badge="Latest">
+            <div className="announcement-stack">
+              {data.announcements.map((item) => (
+                <div key={item.title} className="announcement-inline">
+                  <small>{item.date}</small>
+                  <strong>{item.title}</strong>
+                </div>
+              ))}
+            </div>
+          </Panel>
+        </section>
+      </main>
+    </div>
+  );
+}
