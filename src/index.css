@@ -1,26 +1,13 @@
-import { useState } from 'react';
+import { SectionHeader, StatCard } from './components';
 import data from './data';
 
-type Route = 'website' | 'student' | 'admin';
-type StudentTab = 'overview' | 'attendance' | 'courses';
-
-const studentProfile = {
-  name: 'Aisha Bello',
-  level: 'Year 2',
-  programme: 'Primary Education',
-  attendance: 88,
-  classesToday: 4,
-  announcements: 6,
-};
-
-const statusSummary = [
-  { title: 'Present', count: 18 },
-  { title: 'Excused', count: 3 },
-  { title: 'Absent', count: 2 },
-  { title: 'Late', count: 1 },
-];
-
-function WebsitePage({ onOpenStudent, onOpenAdmin }: { onOpenStudent: () => void; onOpenAdmin: () => void }) {
+export function WebsiteShell({
+  onOpenStudent,
+  onOpenAdmin,
+}: {
+  onOpenStudent: () => void;
+  onOpenAdmin: () => void;
+}) {
   return (
     <div className="app-shell">
       <header className="site-header">
@@ -33,7 +20,7 @@ function WebsitePage({ onOpenStudent, onOpenAdmin }: { onOpenStudent: () => void
             </div>
           </div>
 
-          <nav className="site-nav">
+          <nav className="site-nav" aria-label="Main navigation">
             {data.navItems.map((item) => (
               <a key={item} href="#" className="nav-link">
                 {item}
@@ -41,9 +28,10 @@ function WebsitePage({ onOpenStudent, onOpenAdmin }: { onOpenStudent: () => void
             ))}
           </nav>
 
-          <button className="primary-button" onClick={onOpenStudent}>
-            Student Login
-          </button>
+          <div className="header-actions">
+            <button className="secondary-button admin-mini" onClick={onOpenAdmin}>Admin</button>
+            <button className="primary-button" onClick={onOpenStudent}>Student Login</button>
+          </div>
         </div>
       </header>
 
@@ -54,21 +42,17 @@ function WebsitePage({ onOpenStudent, onOpenAdmin }: { onOpenStudent: () => void
               <p className="eyebrow">AISHA TEACHERS COLLEGE</p>
               <h1>Shaping the teachers who shape tomorrow.</h1>
               <p className="lead">
-                At Aisha Teachers College, we prepare aspiring educators with the knowledge, practical skills and professional values to inspire lives and transform classrooms.
+                At Aisha Teachers College, we prepare aspiring educators with the knowledge,
+                practical skills and professional values to inspire lives and transform classrooms.
               </p>
               <div className="cta-row">
                 <button className="primary-button">Explore Programmes</button>
-                <button className="secondary-button" onClick={onOpenStudent}>
-                  Student Portal
-                </button>
-                <button className="secondary-button admin-mini" onClick={onOpenAdmin}>
-                  Admin Portal
-                </button>
+                <button className="secondary-button" onClick={onOpenStudent}>Student Portal</button>
               </div>
             </div>
 
             <div className="hero-panel">
-              <div className="hero-card image-card">
+              <div className="hero-card">
                 <div className="image-overlay" />
                 <div className="card-floating">
                   <strong>4-Year Teacher Training</strong>
@@ -82,10 +66,7 @@ function WebsitePage({ onOpenStudent, onOpenAdmin }: { onOpenStudent: () => void
         <section className="metrics-container">
           <div className="container stats-grid">
             {data.stats.map((stat) => (
-              <div key={stat.label} className="stat-box">
-                <strong>{stat.value}</strong>
-                <span>{stat.label}</span>
-              </div>
+              <StatCard key={stat.label} label={stat.label} value={stat.value} />
             ))}
           </div>
         </section>
@@ -96,36 +77,38 @@ function WebsitePage({ onOpenStudent, onOpenAdmin }: { onOpenStudent: () => void
             <p className="eyebrow">Welcome to Aisha Teachers College</p>
             <h2>Preparing capable, professional and inspiring educators.</h2>
             <p>
-              Education is a powerful force for transformation. At Aisha Teachers College, we help aspiring teachers grow intellectually, practically and ethically, creating professionals who are ready to serve in classrooms and communities with confidence.
+              Education is a powerful force for transformation. At Aisha Teachers College,
+              we help aspiring teachers grow intellectually, practically and ethically, creating
+              professionals who are ready to serve in classrooms and communities with confidence.
             </p>
             <button className="secondary-button">Discover Our Institution</button>
           </div>
         </section>
 
         <section className="container section-block">
-          <div className="section-header">
-            <p className="eyebrow">Our mission and vision</p>
-            <h2>Academic excellence with purpose.</h2>
-          </div>
+          <SectionHeader eyebrow="Our mission and vision" title="Academic excellence with purpose." />
           <div className="mission-grid">
             <article className="info-card highlight">
               <p className="eyebrow">Vision</p>
               <h3>To be a recognised centre of teacher education.</h3>
-              <p>Developing competent, innovative and responsible educators who contribute to academic advancement and community development.</p>
+              <p>
+                Developing competent, innovative and responsible educators who contribute to
+                academic advancement and community development.
+              </p>
             </article>
             <article className="info-card">
               <p className="eyebrow">Mission</p>
               <h3>To provide quality teacher education.</h3>
-              <p>Through effective instruction, practical training and professional development that prepare students for meaningful service.</p>
+              <p>
+                Through effective instruction, practical training and professional development
+                that prepare students for meaningful service.
+              </p>
             </article>
           </div>
         </section>
 
         <section className="container section-block">
-          <div className="section-header">
-            <p className="eyebrow">Why choose us</p>
-            <h2>A learning environment built for teacher development.</h2>
-          </div>
+          <SectionHeader eyebrow="Why choose us" title="A learning environment built for teacher development." />
           <div className="feature-grid">
             {data.features.map((feature) => (
               <article key={feature.title} className="feature-card">
@@ -140,10 +123,7 @@ function WebsitePage({ onOpenStudent, onOpenAdmin }: { onOpenStudent: () => void
         </section>
 
         <section className="container section-block alt-section">
-          <div className="section-header">
-            <p className="eyebrow">Academic programme</p>
-            <h2>Your journey towards becoming an effective educator.</h2>
-          </div>
+          <SectionHeader eyebrow="Academic programme" title="Your journey towards becoming an effective educator." />
           <div className="programme-grid">
             {data.programmes.map((programme) => (
               <article key={programme.year} className="programme-card">
@@ -156,10 +136,28 @@ function WebsitePage({ onOpenStudent, onOpenAdmin }: { onOpenStudent: () => void
         </section>
 
         <section className="container section-block">
-          <div className="section-header">
-            <p className="eyebrow">Announcements</p>
-            <h2>Important updates from the college community.</h2>
+          <SectionHeader eyebrow="Admissions" title="Start your journey with Aisha Teachers College." align="center" />
+          <div className="admissions-grid">
+            <article className="info-card">
+              <p className="eyebrow">Application</p>
+              <h3>Simple and guided admission support</h3>
+              <p>Submit your details, track requirements and receive institutional guidance for the right programme route.</p>
+            </article>
+            <article className="info-card">
+              <p className="eyebrow">Requirements</p>
+              <h3>Clear entry information</h3>
+              <p>Understand the admission process, academic expectations and steps toward joining the institution.</p>
+            </article>
+            <article className="info-card highlight small-highlight">
+              <p className="eyebrow">Next step</p>
+              <h3>Secure your academic future</h3>
+              <p>Choose a programme, complete the process and begin a progressive teacher-training experience.</p>
+            </article>
           </div>
+        </section>
+
+        <section className="container section-block">
+          <SectionHeader eyebrow="Announcements" title="Important updates from the college community." />
           <div className="announcement-grid">
             {data.announcements.map((item) => (
               <article key={item.title} className="announcement-card">
@@ -176,7 +174,8 @@ function WebsitePage({ onOpenStudent, onOpenAdmin }: { onOpenStudent: () => void
             <p className="eyebrow">Aisha Campus Radio</p>
             <h2>Learning beyond the classroom.</h2>
             <p>
-              Stay connected through educational conversations, institutional updates and student-focused programming that keeps the campus informed and inspired.
+              Stay connected through educational conversations, institutional updates and
+              student-focused programming that keeps the campus informed and inspired.
             </p>
             <ul>
               {data.radioShows.map((show) => (
@@ -185,6 +184,7 @@ function WebsitePage({ onOpenStudent, onOpenAdmin }: { onOpenStudent: () => void
             </ul>
             <button className="primary-button">Listen Live</button>
           </div>
+
           <div className="radio-player">
             <div className="player-header">
               <span className="status-indicator" />
@@ -206,6 +206,30 @@ function WebsitePage({ onOpenStudent, onOpenAdmin }: { onOpenStudent: () => void
             </div>
           </div>
         </section>
+
+        <section className="container section-block contact-section">
+          <SectionHeader eyebrow="Contact" title="Speak with the college community." align="center" />
+          <div className="contact-card">
+            <div>
+              <p className="eyebrow">Information desk</p>
+              <h3>Get support from the institution</h3>
+            </div>
+            <div className="contact-grid">
+              <div>
+                <strong>Email</strong>
+                <span>info@aishateacherscollege.edu.ng</span>
+              </div>
+              <div>
+                <strong>Phone</strong>
+                <span>+234 800 000 0000</span>
+              </div>
+              <div>
+                <strong>Location</strong>
+                <span>Ilorin, Kwara State, Nigeria</span>
+              </div>
+            </div>
+          </div>
+        </section>
       </main>
 
       <footer className="site-footer">
@@ -220,6 +244,7 @@ function WebsitePage({ onOpenStudent, onOpenAdmin }: { onOpenStudent: () => void
             </div>
             <p>Preparing future teachers for academic excellence, professional service and community impact.</p>
           </div>
+
           <div>
             <h4>Quick links</h4>
             <ul>
@@ -229,6 +254,7 @@ function WebsitePage({ onOpenStudent, onOpenAdmin }: { onOpenStudent: () => void
               <li>Campus Radio</li>
             </ul>
           </div>
+
           <div>
             <h4>Contact</h4>
             <ul>
@@ -243,83 +269,13 @@ function WebsitePage({ onOpenStudent, onOpenAdmin }: { onOpenStudent: () => void
   );
 }
 
-function StudentPortal({ onBack }: { onBack: () => void }) {
-  const [activeTab, setActiveTab] = useState<StudentTab>('overview');
-  const [showLogin, setShowLogin] = useState(true);
-  const [form, setForm] = useState({ reg: '', password: '' });
-
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = event.target;
-    setForm((current) => ({ ...current, [name]: value }));
+export function StudentPortal({ onBack }: { onBack: () => void }) {
+  const student = {
+    name: 'Aisha Bello',
+    level: 'Year 2',
+    attendance: 88,
+    classesToday: 4,
   };
-
-  const handleLogin = (event: React.FormEvent) => {
-    event.preventDefault();
-    if (form.reg && form.password) {
-      setShowLogin(false);
-    }
-  };
-
-  if (showLogin) {
-    return (
-      <div className="portal-shell">
-        <header className="topbar">
-          <div className="brand-inline">
-            <div className="brand-mark small">AT</div>
-            <div>
-              <strong>Aisha Teachers College</strong>
-              <small>Student Portal</small>
-            </div>
-          </div>
-          <button className="secondary-button" onClick={onBack}>Back to site</button>
-        </header>
-
-        <main className="portal-login-wrap">
-          <section className="auth-card">
-            <div className="auth-header">
-              <div className="brand-mark">AT</div>
-              <h2>Welcome back</h2>
-              <p>Sign in to access your academic dashboard and records.</p>
-            </div>
-
-            <form className="auth-form" onSubmit={handleLogin}>
-              <label>
-                Student Registration Number
-                <input
-                  type="text"
-                  name="reg"
-                  value={form.reg}
-                  onChange={handleChange}
-                  placeholder="ATC-2026-024"
-                />
-              </label>
-
-              <label>
-                Password
-                <input
-                  type="password"
-                  name="password"
-                  value={form.password}
-                  onChange={handleChange}
-                  placeholder="Enter password"
-                />
-              </label>
-
-              <div className="form-row">
-                <label className="checkbox-row">
-                  <input type="checkbox" />
-                  Remember me
-                </label>
-                <button type="button" className="text-button">Forgot password?</button>
-              </div>
-
-              <button className="primary-button full" type="submit">Student Login</button>
-            </form>
-          </section>
-        </main>
-      </div>
-    );
-  }
 
   return (
     <div className="portal-shell">
@@ -332,22 +288,16 @@ function StudentPortal({ onBack }: { onBack: () => void }) {
           </div>
         </div>
 
-        <nav className="portal-nav">
-          {['overview', 'attendance', 'courses'].map((tabName) => (
-            <button
-              key={tabName}
-              type="button"
-              className={`nav-link ${activeTab === tabName ? 'active' : ''}`}
-              onClick={() => setActiveTab(tabName as StudentTab)}
-            >
-              {tabName === 'overview' ? 'Dashboard' : tabName === 'attendance' ? 'Attendance' : 'Courses'}
-            </button>
-          ))}
+        <nav className="portal-nav" aria-label="Student navigation">
+          <button type="button" className="nav-link active">Dashboard</button>
+          <button type="button" className="nav-link">Courses</button>
+          <button type="button" className="nav-link">Attendance</button>
+          <button type="button" className="nav-link">Calendar</button>
         </nav>
 
         <div className="user-badge">
           <span className="dot" />
-          {studentProfile.name}
+          {student.name}
         </div>
       </header>
 
@@ -355,124 +305,71 @@ function StudentPortal({ onBack }: { onBack: () => void }) {
         <section className="welcome-panel">
           <div>
             <p className="eyebrow">Good morning</p>
-            <h1>Welcome back, {studentProfile.name.split(' ')[0]}.</h1>
+            <h1>Welcome back, {student.name.split(' ')[0]}.</h1>
           </div>
           <button className="secondary-button" onClick={onBack}>Public Site</button>
         </section>
 
-        {activeTab === 'overview' && (
-          <>
-            <section className="quick-grid">
-              {data.quickStats.map((card) => (
-                <article key={card.label} className={`metric-card ${card.tone}`}>
-                  <span>{card.label}</span>
-                  <strong>{card.value}</strong>
-                </article>
-              ))}
-            </section>
+        <section className="quick-grid">
+          {data.quickStats.map((card) => (
+            <article key={card.label} className={`metric-card ${card.tone}`}>
+              <span>{card.label}</span>
+              <strong>{card.value}</strong>
+            </article>
+          ))}
+        </section>
 
-            <section className="split-grid">
-              <div className="card-panel">
-                <div className="panel-header-row">
-                  <h3>Today’s timetable</h3>
-                  <span className="mini-tag">{studentProfile.classesToday} classes</span>
-                </div>
-                <div className="timetable-list">
-                  {data.studentCourses.map((item) => (
-                    <div key={item.code} className="timetable-item">
-                      <div>
-                        <strong>{item.title}</strong>
-                        <small>{item.lecturer}</small>
-                      </div>
-                      <div className="meta-right">
-                        <span>{item.time}</span>
-                        <small>{item.venue}</small>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div className="card-panel">
-                <div className="panel-header-row">
-                  <h3>Attendance summary</h3>
-                  <span className="mini-tag">{studentProfile.attendance}%</span>
-                </div>
-                <div className="progress-wrap">
-                  <div className="progress-bar" style={{ width: `${studentProfile.attendance}%` }} />
-                </div>
-                <div className="status-list">
-                  {statusSummary.map((status) => (
-                    <div key={status.title} className="status-row">
-                      <span>{status.title}</span>
-                      <strong>{status.count}</strong>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </section>
-          </>
-        )}
-
-        {activeTab === 'attendance' && (
-          <section className="card-panel full-width-panel">
+        <section className="split-grid">
+          <div className="card-panel">
             <div className="panel-header-row">
-              <h3>Attendance record</h3>
-              <span className="mini-tag">Current semester</span>
+              <h3>Today’s timetable</h3>
+              <span className="mini-tag">{student.classesToday} classes</span>
             </div>
-            <table className="data-table">
-              <thead>
-                <tr>
-                  <th>Course</th>
-                  <th>Date</th>
-                  <th>Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                {data.attendanceRows.map((row) => (
-                  <tr key={`${row.course}-${row.date}`}>
-                    <td>{row.course}</td>
-                    <td>{row.date}</td>
-                    <td>
-                      <span className={`status-pill ${row.status.toLowerCase()}`}>{row.status}</span>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </section>
-        )}
-
-        {activeTab === 'courses' && (
-          <section className="card-panel full-width-panel">
-            <div className="panel-header-row">
-              <h3>Registered courses</h3>
-              <span className="mini-tag">4 active</span>
-            </div>
-            <div className="course-list">
-              {data.studentCourses.map((course) => (
-                <div key={course.code} className="course-item">
+            <div className="timetable-list">
+              {data.studentCourses.map((item) => (
+                <div key={item.code} className="timetable-item">
                   <div>
-                    <span className="course-code">{course.code}</span>
-                    <h4>{course.title}</h4>
-                    <p>{course.lecturer}</p>
+                    <strong>{item.title}</strong>
+                    <small>{item.lecturer}</small>
                   </div>
-                  <div className="course-meta">
-                    <span>{course.time}</span>
-                    <span>{course.venue}</span>
-                    <strong>{course.attendance}% attendance</strong>
+                  <div className="meta-right">
+                    <span>{item.time}</span>
+                    <small>{item.venue}</small>
                   </div>
                 </div>
               ))}
             </div>
-          </section>
-        )}
+          </div>
+
+          <div className="card-panel">
+            <div className="panel-header-row">
+              <h3>Attendance summary</h3>
+              <span className="mini-tag">{student.attendance}%</span>
+            </div>
+            <div className="progress-wrap">
+              <div className="progress-bar" style={{ width: `${student.attendance}%` }} />
+            </div>
+            <div className="status-list">
+              {[
+                { title: 'Present', count: 18 },
+                { title: 'Excused', count: 3 },
+                { title: 'Absent', count: 2 },
+                { title: 'Late', count: 1 },
+              ].map((status) => (
+                <div key={status.title} className="status-row">
+                  <span>{status.title}</span>
+                  <strong>{status.count}</strong>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
       </main>
     </div>
   );
 }
 
-function AdminPortal({ onBack }: { onBack: () => void }) {
+export function AdminPortal({ onBack }: { onBack: () => void }) {
   return (
     <div className="portal-shell admin-shell">
       <header className="topbar">
@@ -483,6 +380,7 @@ function AdminPortal({ onBack }: { onBack: () => void }) {
             <small>Admin Portal</small>
           </div>
         </div>
+
         <div className="admin-actions">
           <button className="secondary-button">+ New Announcement</button>
           <button className="primary-button" onClick={onBack}>Back to site</button>
@@ -556,22 +454,5 @@ function AdminPortal({ onBack }: { onBack: () => void }) {
         </section>
       </main>
     </div>
-  );
-}
-
-export default function App() {
-  const [route, setRoute] = useState<Route>('website');
-
-  return (
-    <>
-      {route === 'website' && (
-        <WebsitePage
-          onOpenStudent={() => setRoute('student')}
-          onOpenAdmin={() => setRoute('admin')}
-        />
-      )}
-      {route === 'student' && <StudentPortal onBack={() => setRoute('website')} />}
-      {route === 'admin' && <AdminPortal onBack={() => setRoute('website')} />}
-    </>
   );
 }
