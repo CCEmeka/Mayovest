@@ -1,406 +1,162 @@
-import { useMemo, useState } from 'react';
-import data from './data';
-
-const studentProfile = {
-  name: 'Aisha Bello',
-  level: 'Year 2',
-  programme: 'Primary Education',
-  attendance: 88,
-  classesToday: 4,
-  announcements: 6,
+export type Programme = {
+  year: string;
+  title: string;
+  description: string;
 };
 
-const quickCards = [
+export type Announcement = {
+  date: string;
+  title: string;
+  text: string;
+};
+
+export type Feature = {
+  title: string;
+  text: string;
+};
+
+export type StaffMember = {
+  name: string;
+  role: string;
+  email: string;
+};
+
+export type StudentCourse = {
+  code: string;
+  title: string;
+  lecturer: string;
+  time: string;
+  venue: string;
+  attendance: number;
+};
+
+export type AttendanceRow = {
+  course: string;
+  date: string;
+  status: 'Present' | 'Absent' | 'Late' | 'Excused';
+};
+
+const navItems = ['Home', 'About', 'Academics', 'Admissions', 'Campus Radio', 'News & Events', 'Contact'];
+
+const stats = [
+  { label: 'Students', value: '2,400+' },
+  { label: 'Faculties', value: '8' },
+  { label: 'Programmes', value: '4-Year' },
+  { label: 'Support', value: '24/7' },
+];
+
+const programmes: Programme[] = [
+  {
+    year: 'Year 1',
+    title: 'Foundation',
+    description: 'Build the foundations of teacher education through learning skills, communication and educational theory.',
+  },
+  {
+    year: 'Year 2',
+    title: 'Development',
+    description: 'Expand subject knowledge, classroom methods and collaborative learning strategies for teaching practice.',
+  },
+  {
+    year: 'Year 3',
+    title: 'Professional Preparation',
+    description: 'Prepare students for strong classroom management, lesson design, assessment and practicum exposure.',
+  },
+  {
+    year: 'Year 4',
+    title: 'Professional Competence',
+    description: 'Advance final teaching readiness through assessment, supervised practice and professional reflection.',
+  },
+];
+
+const features: Feature[] = [
+  {
+    title: 'Structured four-year training',
+    text: 'A guided academic journey designed to grow students from foundation learning into confident educators.',
+  },
+  {
+    title: 'Practical teaching experience',
+    text: 'Students develop real classroom communication, lesson planning and instructional confidence in practice.',
+  },
+  {
+    title: 'Professional development',
+    text: 'A disciplined environment that promotes leadership, responsibility and ethical professional growth.',
+  },
+  {
+    title: 'Supportive community',
+    text: 'Students, lecturers and administrators work together in a collaborative academic atmosphere.',
+  },
+  {
+    title: 'Technology-enabled learning',
+    text: 'Digital systems support access to information, course activity, attendance and academic communication.',
+  },
+];
+
+const announcements: Announcement[] = [
+  {
+    date: '12 Nov 2026',
+    title: 'Admission intake opens for the 2026/2027 session',
+    text: 'Prospective students can begin the application process and obtain admission guidance for the new session.',
+  },
+  {
+    date: '08 Nov 2026',
+    title: 'Academic calendar updated',
+    text: 'Check the revised dates for resumption, assessments and teaching practice milestones.',
+  },
+  {
+    date: '02 Nov 2026',
+    title: 'Campus radio programme schedule released',
+    text: 'Students can tune in to educational conversations, updates and student-centred programmes.',
+  },
+];
+
+const radioShows = [
+  'The Educator\'s Voice',
+  'Campus Conversations',
+  'The Learning Hour',
+  'Ask the Lecturer',
+  'Voice of Inspiration',
+  'Student Spotlight',
+];
+
+const staff: StaffMember[] = [
+  { name: 'Dr. Grace Ajayi', role: 'Academic Coordinator', email: 'grace.ajayi@aishateacherscollege.edu.ng' },
+  { name: 'Mrs. Hajara Ibrahim', role: 'Head of Department', email: 'hajara.ibrahim@aishateacherscollege.edu.ng' },
+  { name: 'Mr. Kola Bello', role: 'Lecturer', email: 'kola.bello@aishateacherscollege.edu.ng' },
+  { name: 'Mrs. Maryam Musa', role: 'Student Affairs Officer', email: 'maryam.musa@aishateacherscollege.edu.ng' },
+];
+
+const studentCourses: StudentCourse[] = [
+  { code: 'EDU 101', title: 'Educational Psychology', lecturer: 'Dr. Ajayi', time: '08:00 - 09:00', venue: 'Room A5', attendance: 86 },
+  { code: 'ENG 112', title: 'English Methods', lecturer: 'Mrs. Ibrahim', time: '09:30 - 10:30', venue: 'Room B2', attendance: 91 },
+  { code: 'EDU 126', title: 'Classroom Practice', lecturer: 'Mr. Bello', time: '11:00 - 12:00', venue: 'Teaching Lab', attendance: 83 },
+  { code: 'GST 104', title: 'General Studies', lecturer: 'Mrs. Musa', time: '13:00 - 14:00', venue: 'Room C1', attendance: 90 },
+];
+
+const attendanceRows: AttendanceRow[] = [
+  { course: 'Educational Psychology', date: '2026-11-05', status: 'Present' },
+  { course: 'English Methods', date: '2026-11-05', status: 'Late' },
+  { course: 'Classroom Practice', date: '2026-11-06', status: 'Present' },
+  { course: 'General Studies', date: '2026-11-07', status: 'Excused' },
+  { course: 'Educational Psychology', date: '2026-11-08', status: 'Present' },
+  { course: 'English Methods', date: '2026-11-08', status: 'Absent' },
+];
+
+const quickStats = [
   { label: 'Attendance', value: '88%', tone: 'blue' },
   { label: 'Current Level', value: 'Year 2', tone: 'light' },
   { label: 'Classes Today', value: '4', tone: 'blue' },
   { label: 'Unread Notices', value: '6', tone: 'light' },
 ];
 
-const timetable = [
-  { course: 'Educational Psychology', time: '08:00 - 09:00', venue: 'Room A5', lecturer: 'Dr. Ajayi' },
-  { course: 'English Methods', time: '09:30 - 10:30', venue: 'Room B2', lecturer: 'Mrs. Ibrahim' },
-  { course: 'Classroom Practice', time: '11:00 - 12:00', venue: 'Teaching Lab', lecturer: 'Mr. Bello' },
-  { course: 'General Studies', time: '13:00 - 14:00', venue: 'Room C1', lecturer: 'Mrs. Musa' },
-];
-
-const statuses = [
-  { title: 'Present', count: 18 },
-  { title: 'Excused', count: 3 },
-  { title: 'Absent', count: 2 },
-  { title: 'Late', count: 1 },
-];
-
-function App() {
-  const [view, setView] = useState<'website' | 'portal'>('website');
-  const [loggedIn, setLoggedIn] = useState(false);
-  const [form, setForm] = useState({ reg: '', password: '' });
-
-  const pageTitle = useMemo(() => (view === 'portal' ? 'Student Portal' : 'Aisha Teachers College'), [view]);
-
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = event.target;
-    setForm((current) => ({ ...current, [name]: value }));
-  };
-
-  const handleLogin = (event: React.FormEvent) => {
-    event.preventDefault();
-    if (form.reg && form.password) {
-      setLoggedIn(true);
-      setView('portal');
-    }
-  };
-
-  if (view === 'portal') {
-    return (
-      <div className="app-shell portal-shell">
-        <header className="topbar">
-          <div className="brand-inline">
-            <div className="brand-mark small">AT</div>
-            <div>
-              <strong>Aisha Teachers College</strong>
-              <small>Student Portal</small>
-            </div>
-          </div>
-          <nav className="portal-nav">
-            <button className="nav-link active">Dashboard</button>
-            <button className="nav-link">Courses</button>
-            <button className="nav-link">Attendance</button>
-            <button className="nav-link">Calendar</button>
-          </nav>
-          <div className="user-badge">
-            <span className="dot" />
-            {loggedIn ? studentProfile.name : 'Guest'}
-          </div>
-        </header>
-
-        {!loggedIn ? (
-          <main className="portal-login-wrap">
-            <section className="auth-card">
-              <div className="auth-header">
-                <div className="brand-mark">AT</div>
-                <h2>Welcome back</h2>
-                <p>Sign in to access your academic dashboard and records.</p>
-              </div>
-
-              <form className="auth-form" onSubmit={handleLogin}>
-                <label>
-                  Student Registration Number
-                  <input
-                    type="text"
-                    name="reg"
-                    value={form.reg}
-                    onChange={handleChange}
-                    placeholder="ATC-2026-024"
-                  />
-                </label>
-
-                <label>
-                  Password
-                  <input
-                    type="password"
-                    name="password"
-                    value={form.password}
-                    onChange={handleChange}
-                    placeholder="Enter password"
-                  />
-                </label>
-
-                <div className="form-row">
-                  <label className="checkbox-row">
-                    <input type="checkbox" />
-                    Remember me
-                  </label>
-                  <button type="button" className="text-button">Forgot password?</button>
-                </div>
-
-                <button className="primary-button full" type="submit">Student Login</button>
-              </form>
-            </section>
-          </main>
-        ) : (
-          <main className="portal-content">
-            <section className="welcome-panel">
-              <div>
-                <p className="eyebrow">Good morning</p>
-                <h1>Welcome back, {studentProfile.name.split(' ')[0]}.</h1>
-              </div>
-              <button className="secondary-button" onClick={() => setView('website')}>
-                Public Site
-              </button>
-            </section>
-
-            <section className="quick-grid">
-              {quickCards.map((card) => (
-                <article key={card.label} className={`metric-card ${card.tone}`}>
-                  <span>{card.label}</span>
-                  <strong>{card.value}</strong>
-                </article>
-              ))}
-            </section>
-
-            <section className="split-grid">
-              <div className="card-panel">
-                <div className="panel-header-row">
-                  <h3>Today’s timetable</h3>
-                  <span className="mini-tag">4 classes</span>
-                </div>
-                <div className="timetable-list">
-                  {timetable.map((item) => (
-                    <div key={item.course} className="timetable-item">
-                      <div>
-                        <strong>{item.course}</strong>
-                        <small>{item.lecturer}</small>
-                      </div>
-                      <div className="meta-right">
-                        <span>{item.time}</span>
-                        <small>{item.venue}</small>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div className="card-panel">
-                <div className="panel-header-row">
-                  <h3>Attendance summary</h3>
-                  <span className="mini-tag">{studentProfile.attendance}%</span>
-                </div>
-                <div className="progress-wrap">
-                  <div className="progress-bar">
-                    <span style={{ width: `${studentProfile.attendance}%` }} />
-                  </div>
-                </div>
-                <div className="status-list">
-                  {statuses.map((status) => (
-                    <div key={status.title} className="status-row">
-                      <span>{status.title}</span>
-                      <strong>{status.count}</strong>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </section>
-          </main>
-        )}
-      </div>
-    );
-  }
-
-  return (
-    <div className="app-shell">
-      <header className="site-header">
-        <div className="container nav-row">
-          <div className="brand-inline">
-            <div className="brand-mark">AT</div>
-            <div>
-              <strong>Aisha Teachers College</strong>
-              <small>Ilorin, Nigeria</small>
-            </div>
-          </div>
-
-          <nav className="site-nav">
-            {data.navItems.map((item) => (
-              <a key={item} href="#" className="nav-link">
-                {item}
-              </a>
-            ))}
-          </nav>
-
-          <button className="primary-button" onClick={() => setView('portal')}>
-            Student Login
-          </button>
-        </div>
-      </header>
-
-      <main>
-        <section className="hero-section">
-          <div className="container hero-grid">
-            <div className="hero-copy">
-              <p className="eyebrow">AISHA TEACHERS COLLEGE</p>
-              <h1>Shaping the teachers who shape tomorrow.</h1>
-              <p className="lead">
-                At Aisha Teachers College, we prepare aspiring educators with the knowledge, practical skills and professional values to inspire lives and transform classrooms.
-              </p>
-              <div className="cta-row">
-                <button className="primary-button">Explore Programmes</button>
-                <button className="secondary-button" onClick={() => setView('portal')}>
-                  Student Portal
-                </button>
-              </div>
-            </div>
-
-            <div className="hero-panel">
-              <div className="hero-card image-card">
-                <div className="image-overlay" />
-                <div className="card-floating">
-                  <strong>4-Year Teacher Training</strong>
-                  <span>Academic excellence and professional growth</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section className="metrics-container">
-          <div className="container stats-grid">
-            {data.stats.map((stat) => (
-              <div key={stat.label} className="stat-box">
-                <strong>{stat.value}</strong>
-                <span>{stat.label}</span>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        <section className="container section-block intro-section">
-          <div className="image-panel" />
-          <div className="text-panel">
-            <p className="eyebrow">Welcome to Aisha Teachers College</p>
-            <h2>Preparing capable, professional and inspiring educators.</h2>
-            <p>
-              Education is a powerful force for transformation. At Aisha Teachers College, we help aspiring teachers grow intellectually, practically and ethically, creating professionals who are ready to serve in classrooms and communities with confidence.
-            </p>
-            <button className="secondary-button">Discover Our Institution</button>
-          </div>
-        </section>
-
-        <section className="container section-block">
-          <div className="section-header">
-            <p className="eyebrow">Our mission and vision</p>
-            <h2>Academic excellence with purpose.</h2>
-          </div>
-          <div className="mission-grid">
-            <article className="info-card highlight">
-              <p className="eyebrow">Vision</p>
-              <h3>To be a recognised centre of teacher education.</h3>
-              <p>Developing competent, innovative and responsible educators who contribute to academic advancement and community development.</p>
-            </article>
-            <article className="info-card">
-              <p className="eyebrow">Mission</p>
-              <h3>To provide quality teacher education.</h3>
-              <p>Through effective instruction, practical training and professional development that prepare students for meaningful service.</p>
-            </article>
-          </div>
-        </section>
-
-        <section className="container section-block">
-          <div className="section-header">
-            <p className="eyebrow">Why choose us</p>
-            <h2>A learning environment built for teacher development.</h2>
-          </div>
-          <div className="feature-grid">
-            {data.features.map((feature) => (
-              <article key={feature} className="feature-card">
-                <div className="bullet-mark" />
-                <p>{feature}</p>
-              </article>
-            ))}
-          </div>
-        </section>
-
-        <section className="container section-block alt-section">
-          <div className="section-header">
-            <p className="eyebrow">Academic programme</p>
-            <h2>Your journey towards becoming an effective educator.</h2>
-          </div>
-          <div className="programme-grid">
-            {data.programmes.map((programme) => (
-              <article key={programme.year} className="programme-card">
-                <span className="year-pill">{programme.year}</span>
-                <h3>{programme.title}</h3>
-                <p>{programme.description}</p>
-              </article>
-            ))}
-          </div>
-        </section>
-
-        <section className="container section-block">
-          <div className="section-header">
-            <p className="eyebrow">Announcements</p>
-            <h2>Important updates from the college community.</h2>
-          </div>
-          <div className="announcement-grid">
-            {data.announcements.map((item) => (
-              <article key={item.title} className="announcement-card">
-                <span className="announcement-date">{item.date}</span>
-                <h3>{item.title}</h3>
-                <p>{item.text}</p>
-              </article>
-            ))}
-          </div>
-        </section>
-
-        <section className="container section-block radio-section">
-          <div className="radio-copy">
-            <p className="eyebrow">Aisha Campus Radio</p>
-            <h2>Learning beyond the classroom.</h2>
-            <p>
-              Stay connected through educational conversations, institutional updates and student-focused programming that keeps the campus informed and inspired.
-            </p>
-            <ul>
-              {data.radioShows.map((show) => (
-                <li key={show}>{show}</li>
-              ))}
-            </ul>
-            <button className="primary-button">Listen Live</button>
-          </div>
-          <div className="radio-player">
-            <div className="player-header">
-              <span className="status-indicator" />
-              <strong>Now Broadcasting</strong>
-            </div>
-            <div className="player-body">
-              <div className="wave-lines">
-                <span />
-                <span />
-                <span />
-                <span />
-                <span />
-              </div>
-              <div>
-                <p>Current programme</p>
-                <h3>The Educator's Voice</h3>
-                <small>Hosted by Aisha Campus Media</small>
-              </div>
-            </div>
-          </div>
-        </section>
-      </main>
-
-      <footer className="site-footer">
-        <div className="container footer-grid">
-          <div>
-            <div className="brand-inline footer-brand">
-              <div className="brand-mark">AT</div>
-              <div>
-                <strong>Aisha Teachers College</strong>
-                <small>Ilorin, Nigeria</small>
-              </div>
-            </div>
-            <p>Preparing future teachers for academic excellence, professional service and community impact.</p>
-          </div>
-          <div>
-            <h4>Quick links</h4>
-            <ul>
-              <li>About Us</li>
-              <li>Admissions</li>
-              <li>Student Portal</li>
-              <li>Campus Radio</li>
-            </ul>
-          </div>
-          <div>
-            <h4>Contact</h4>
-            <ul>
-              <li>+234 800 000 0000</li>
-              <li>info@aishateacherscollege.edu.ng</li>
-              <li>Ilorin, Kwara State</li>
-            </ul>
-          </div>
-        </div>
-      </footer>
-    </div>
-  );
-}
-
-export default App;
+export default {
+  navItems,
+  stats,
+  programmes,
+  features,
+  announcements,
+  radioShows,
+  staff,
+  studentCourses,
+  attendanceRows,
+  quickStats,
+};
